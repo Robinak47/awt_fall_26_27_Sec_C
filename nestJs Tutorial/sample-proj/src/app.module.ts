@@ -3,7 +3,7 @@ import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { UsersModule } from './users/users.module.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Users } from './users/entity/users.entities.js';
+import { Users } from './users/entities/users.entity.js';
 
 @Module({
   imports: [
@@ -11,11 +11,11 @@ import { Users } from './users/entity/users.entities.js';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
+      port: 5432,
       username: 'postgres',
       password: 'admin',
-      database: 'awt_c_fall_26_27',
+      database: 'myTestDB2',
       autoLoadEntities: true,
-
       synchronize: true,
     }),
   ],

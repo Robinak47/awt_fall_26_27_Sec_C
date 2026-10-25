@@ -17,6 +17,8 @@ import {
   FileTypeValidator,
   UploadedFiles,
   Res,
+  Delete,
+  Put,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { UsersService } from './users.service.js';
@@ -26,44 +28,62 @@ import { UpdateUserDto } from './dtos/update-user.dto.js';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage, memoryStorage } from 'multer';
 import { promises as fs } from 'fs';
+import { Users } from './entities/users.entity.js';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get('findUserById/:id')
-  getUserWithId(@Param() params: GetParamDTO) {
-    console.log(params.id, typeof params.id);
+  // @Get('findUser')
+  // getUserByName(
+  //   @Query('name', new DefaultValuePipe('Ronaldo')) name: any,
+  //   @Query('isFootballer', ParseBoolPipe) isFootballer: boolean,
+  // ) {
+  //   console.log(name);
+  //   console.log(typeof name);
+  //   console.log(isFootballer);
+  //   console.log(typeof isFootballer);
+  // }
+
+  @Get('getAllUsers')
+  async getAllUser(): Promise<Users[]> {
+    return await this.usersService.getAllUser();
   }
 
-  @Get('findUser')
-  getUserByName(
-    @Query('name', new DefaultValuePipe('Ronaldo')) name: any,
-    @Query('isFootballer', ParseBoolPipe) isFootballer: boolean,
-  ) {
-    console.log(name);
-    console.log(typeof name);
-    console.log(isFootballer);
-    console.log(typeof isFootballer);
+  @Get('findUserById/:id')
+  async getUserWithId(@Param('id') id: string): Promise<Users | string> {
+    return await this.usersService.getUserById(id);
+  }
+
+  @Delete('deleteUser/:id')
+  async deleteUser(@Param('id') id: string): Promise<string> {
+    return await this.usersService.deleteUser(id);
+  }
+
+  @Delete('deleteUser/softDelete/:id')
+  async deleteUserSoft(@Param('id') id: string): Promise<string> {
+    return await this.usersService.deleteUserSoft(id);
   }
 
   @Post('create-user')
-  createUser(@Body() user: CreateUserDto) {
-    console.log(user.id);
-    console.log(user.name);
-    console.log(user.gender);
-    console.log(user.age);
-    console.log(user.email);
-    console.log(user.address);
-    console.log(user.isBangladeshi);
-    console.log(user.password);
+  async createUser(@Body() user: CreateUserDto): Promise<string> {
+    return await this.usersService.createUser(user);
+  }
 
-    return 'user created successfully';
+  @Put('replaceUser/:id')
+  async replaceUser(
+    @Body() user: UpdateUserDto,
+    @Param('id') id: string,
+  ): Promise<Users | string> {
+    return this.usersService.replaceUser(id, user);
   }
 
   @Patch('update-user/:id')
-  updateUserPartially(@Param('id') id: number, @Body() user: UpdateUserDto) {
-    return `updated user Partially of Id ${id}`;
+  async updateUserPartially(
+    @Param('id') id: string,
+    @Body() user: UpdateUserDto,
+  ): Promise<Users | string> {
+    return this.usersService.updateUser(id, user);
   }
 
   @Post('profile-Picture')
@@ -105,8 +125,8 @@ export class UsersController {
     console.log(file.mimetype);
   }
 
-  @Get('download/download/propic-download')
-  downloadFile(@Query('fileName') file: string, @Res() res: Response) {
-    res.sendFile(file, { root: './uploads' });
-  }
+  // @Get('download/download/propic-download')
+  // downloadFile(@Query('fileName') file: string, @Res() res: Response) {
+  //   res.sendFile(file, { root: './uploads' });
+  // }
 }
