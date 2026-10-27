@@ -4,6 +4,8 @@ import { AppService } from './app.service.js';
 import { UsersModule } from './users/users.module.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Users } from './users/entities/users.entity.js';
+import { PassportsModule } from './passports/passports.module.js';
+import { CarsModule } from './cars/cars.module.js';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { Users } from './users/entities/users.entity.js';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    PassportsModule,
+    CarsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -4,8 +4,13 @@ import {
   DeleteDateColumn,
   Entity,
   UpdateDateColumn,
+  OneToOne,
+  OneToMany,
 } from 'typeorm';
 import { PrimaryColumn } from 'typeorm/browser';
+import { Passports } from '../../passports/entities/passports.entity.js';
+import type { Relation } from 'typeorm';
+import { Cars } from '../../cars/entities/cars.entity.js';
 
 @Entity('users')
 export class Users {
@@ -54,6 +59,11 @@ export class Users {
   })
   password: string;
 
+  @OneToOne(() => Passports, (passport) => passport.user)
+  passport: Relation<Passports>;
+
+  @OneToMany(() => Cars, (cars) => cars.user)
+  cars: Relation<Cars>[];
   @UpdateDateColumn()
   updateDate: Date;
   @CreateDateColumn()
