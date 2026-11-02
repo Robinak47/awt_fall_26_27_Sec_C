@@ -57,6 +57,8 @@ export class UsersService {
         address: true,
         gender: true,
         isBangladeshi: true,
+        password: true,
+        role: true,
       },
     });
     if (user) {

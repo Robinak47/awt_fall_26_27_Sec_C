@@ -55,9 +55,12 @@ export class Users {
   @Column({
     name: 'pass',
     type: 'varchar',
-    length: 20,
+    length: 2000,
   })
   password: string;
+
+  @Column()
+  role: string;
 
   @OneToOne(() => Passports, (passport) => passport.user)
   passport: Relation<Passports>;

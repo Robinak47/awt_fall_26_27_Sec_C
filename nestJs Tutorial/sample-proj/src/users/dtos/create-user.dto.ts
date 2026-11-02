@@ -59,4 +59,8 @@ export class CreateUserDto {
     },
   )
   password: string;
+
+  @IsNotEmpty()
+  @IsString()
+  role: string;
 }
