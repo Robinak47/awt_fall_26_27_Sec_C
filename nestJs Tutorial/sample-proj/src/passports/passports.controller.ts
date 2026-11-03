@@ -1,7 +1,8 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
 import { PassportsService } from './passports.service.js';
 import { CreatePassportDto } from './dtos/create-passport.dto.js';
 import { Passports } from './entities/passports.entity.js';
+import { JwtGuard } from '../auth/jwtGuard.guard.js';
 
 @Controller('passports')
 export class PassportsController {
@@ -15,6 +16,7 @@ export class PassportsController {
   }
 
   @Get()
+  @UseGuards(JwtGuard)
   async getAllPassports(): Promise<Passports[]> {
     return await this.passportsService.getAllPassports();
   }

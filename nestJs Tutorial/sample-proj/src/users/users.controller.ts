@@ -19,6 +19,7 @@ import {
   Res,
   Delete,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { UsersService } from './users.service.js';
@@ -29,6 +30,9 @@ import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage, memoryStorage } from 'multer';
 import { promises as fs } from 'fs';
 import { Users } from './entities/users.entity.js';
+import { JwtGuard } from '../auth/jwtGuard.guard.js';
+import { RolesGuard } from '../auth/roles/roles/roles.guard.js';
+import { Roles } from '../auth/roles/roles/roles.decorator.js';
 
 @Controller('users')
 export class UsersController {
@@ -46,6 +50,8 @@ export class UsersController {
   // }
 
   @Get('getAllUsers')
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles('manager', 'admin')
   async getAllUser(): Promise<Users[]> {
     return await this.usersService.getAllUser();
   }

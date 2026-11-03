@@ -5,17 +5,18 @@ import { UsersModule } from '../users/users.module.js';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwtStrategy.strategy.js';
 import { JwtGuard } from './jwtGuard.guard.js';
+import { RolesGuard } from './roles/roles/roles.guard.js';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, JwtGuard],
+  providers: [AuthService, JwtStrategy, JwtGuard, RolesGuard],
   imports: [
     UsersModule,
     JwtModule.register({
       global: true,
       secret: 'Meow-Meow',
       signOptions: {
-        expiresIn: '1H',
+        expiresIn: '1M',
       },
     }),
   ],
